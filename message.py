@@ -1,5 +1,6 @@
 import base64
 from email.utils import parseaddr, parsedate_to_datetime
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 
@@ -120,7 +121,11 @@ class Message:
             elif name == "subject":
                 self.subject = value
             elif name == "date":
-                self.timestamp = parsedate_to_datetime(value)
+                try:
+                    self.timestamp = parsedate_to_datetime(value)
+                except ValueError:
+                    # Set to current time if date parsing fails
+                    self.timestamp = datetime.now()
 
         # Labels
         if "labelIds" in msg:
